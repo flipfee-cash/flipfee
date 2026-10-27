@@ -1,0 +1,30 @@
+{
+  "name": "flipfee-program",
+  "private": true,
+  "type": "module",
+  "description": "flipfee program workspace: TS client build + tests, keeper, mainnet fixture fetch",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "idl": "node client/scripts/gen.mjs",
+    "build:client": "node client/scripts/gen.mjs && tsup --config client/tsup.config.ts && node client/scripts/check-dist.mjs",
+    "build:keeper": "tsup --config keeper/tsup.config.ts",
+    "typecheck": "tsc -p client/tsconfig.json --noEmit && tsc -p keeper/tsconfig.json --noEmit",
+    "test:client": "node --test --test-concurrency=1 client/test/unit.test.mjs",
+    "test:localnet": "node --test --test-concurrency=1 client/test/localnet.test.mjs",
+    "fixtures": "node scripts/fetch-mainnet.mjs",
+    "keeper": "node keeper/dist/cli.js",
+    "pack:client": "cd client && npm pack",
+    "test:keeper": "node --test keeper/test/plan.test.mjs",
+    "test": "cargo test -p flipfee && npm run test:client && npm run test:keeper && npm run test:localnet"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@solana/web3.js": "1.99.0",
+    "@types/node": "^22.20.5",
+    "buffer": "6.0.3",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3"
+  }
+}

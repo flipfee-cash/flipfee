@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ecece7" />
+    <meta name="color-scheme" content="dark" />
+    <title>flipfee · Flip fees into cash.</title>
+    <meta name="description" content="Buy an hour of a coin’s fees. Every trade in that hour pays you SOL. Devs: sell your coin’s next hours of fees and get SOL now." />
+    <link rel="canonical" href="https://flipfee.cash/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="flipfee" />
+    <meta property="og:title" content="flipfee · Flip fees into cash." />
+    <meta property="og:description" content="Buy an hour of a coin’s fees. Every trade in that hour pays you SOL." />
+    <meta property="og:url" content="https://flipfee.cash/" />
+    <meta property="og:image" content="https://flipfee.cash/og.png?v=2" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="flipfee: buy an hour of a coin’s fees" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="flipfee · Flip fees into cash." />
+    <meta name="twitter:description" content="Buy an hour of a coin’s fees. Every trade in that hour pays you SOL." />
+    <meta name="twitter:image" content="https://flipfee.cash/og.png?v=2" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <script>
+      // The first second: ask for the board snapshot while the app code is still loading (src/api/live.ts takes it).
+      (function () {
+        try {
+          window.__ffBoot = {
+            at: Date.now(),
+            board: fetch('/api/board', { headers: { accept: 'application/json' } }).then(function (r) {
+              return r.ok ? r.json() : null;
+            }),
+          };
+          window.__ffBoot.board.catch(function () {});
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      /* first paint, before the app code: the board ground, the top bar and the ticker's shape (React replaces #root) */
+      html { background: #ecece7; }
+      body { margin: 0; background: #ecece7; color: #0e0e10; min-height: 100vh; }
+      .boot { position: fixed; inset: 0; font-family: ui-monospace, Menlo, monospace; }
+      .boot-top { height: 60px; display: flex; align-items: center; gap: 2px; padding: 0 clamp(16px, 3.2vw, 40px); border-bottom: 1px solid #d8d8d0; }
+      .boot-top i { width: 15px; height: 23px; border-radius: 3px; background: #f7f7f3; display: grid; place-items: center; font: 700 14px/23px ui-monospace, Menlo, monospace; font-style: normal; color: #0e0e10; }
+      .boot-tick { margin: 18px clamp(16px, 3.2vw, 40px) 0; height: 64px; border-radius: 12px; background: #f7f7f3; box-shadow: inset 0 0 0 1px #d8d8d0; }
+      .boot-rows { margin: 18px clamp(16px, 3.2vw, 40px) 0; display: grid; gap: 8px; }
+      .boot-rows b { display: block; height: 74px; border-radius: 12px; background: linear-gradient(90deg, #f7f7f3, #e8e8e2, #f7f7f3); background-size: 220% 100%; animation: boot-sh 1.4s linear infinite; }
+      @keyframes boot-sh { from { background-position: 110% 0; } to { background-position: -110% 0; } }
+      @media (prefers-reduced-motion: reduce) { .boot-rows b { animation: none; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"><div class="boot" aria-hidden="true"><div class="boot-top"><i>F</i><i>L</i><i>I</i><i>P</i><i>F</i><i>E</i><i>E</i></div><div class="boot-tick"></div><div class="boot-rows"><b></b><b></b><b></b><b></b></div></div></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

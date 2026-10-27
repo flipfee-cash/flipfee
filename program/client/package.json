@@ -1,0 +1,28 @@
+{
+  "name": "flipfee-client",
+  "version": "0.1.0",
+  "description": "TypeScript client for the flipfee Solana program (pump.fun creator fees sold by the hour): PDAs, decoders, flipfee + pump.fun instruction builders, eligibility, full transactions, events",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./idl": "./idl/flipfee.json"
+  },
+  "files": [
+    "dist",
+    "idl",
+    "src",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "buffer": "^6.0.3"
+  },
+  "license": "UNLICENSED"
+}

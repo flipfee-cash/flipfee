@@ -1,0 +1,163 @@
+/* Live numbers: a dot-matrix face (Doto) with no tiles (src/flap/Flap.tsx). A changed character dithers in through an
+   ordered-dither mask: 25%, 50%, 75% of its dots, then all (only mask-image changes, in three hard steps). */
+.flap {
+  --fs: 17px;
+  --dp: 1px; /* one dither dot */
+  --tone: var(--ink);
+  position: relative; /* keeps the screen-reader text inside scrolling rows */
+  display: inline-flex;
+  vertical-align: middle;
+  font-family: var(--font-tile);
+  font-weight: 900;
+  font-size: var(--fs);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--tone);
+}
+/* small numbers read better in plain mono; the dot face is for the big ones */
+.flap-xs,
+.flap-sm {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.flap-xs {
+  --fs: 13px;
+}
+.flap-sm {
+  --fs: 15px;
+}
+.flap-xs .fc,
+.flap-sm .fc {
+  width: 0.6em;
+}
+.flap-md {
+  --fs: 26px;
+}
+.flap-lg {
+  --fs: 38px;
+  --dp: 2px;
+}
+.flap-xl {
+  --fs: 68px;
+  --dp: 2px;
+}
+
+.tone-cash {
+  --tone: var(--cash);
+}
+.tone-amber {
+  --tone: var(--ink);
+}
+.tone-dim {
+  --tone: var(--label);
+}
+.tone-sell {
+  --tone: var(--ink);
+}
+
+.fc {
+  display: inline-block;
+  flex: none;
+  width: 0.64em;
+  text-align: center;
+}
+.fc-n {
+  width: 0.36em;
+}
+.fc i {
+  display: block;
+  font-style: normal;
+  white-space: pre;
+  -webkit-mask-size: calc(var(--dp) * 2) calc(var(--dp) * 2);
+  mask-size: calc(var(--dp) * 2) calc(var(--dp) * 2);
+}
+.fc.go i {
+  animation: dither-in 160ms var(--fd, 0ms) both;
+}
+.fc.go2 i {
+  animation: dither-in2 160ms var(--fd, 0ms) both;
+}
+@keyframes dither-in {
+  0% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  33% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  66% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='2' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='2' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  100% {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+@keyframes dither-in2 {
+  0% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  33% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='1' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  66% {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='2' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Crect width='2' height='1'/%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/svg%3E");
+    animation-timing-function: step-end;
+  }
+  100% {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* the wordmark: the dithered coin and "flipfee" in dots; ".cash" in ink */
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.wm-coin {
+  display: block;
+  flex: none;
+  image-rendering: pixelated;
+}
+.wm-word {
+  font-family: var(--font-tile);
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+.wm-cash {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--cash);
+  transform: translateY(2px);
+}
+.wordmark-sm .wm-word {
+  font-size: 17px;
+}
+.wordmark-sm .wm-cash {
+  font-size: 11px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fc.go i,
+  .fc.go2 i {
+    animation: none;
+  }
+}

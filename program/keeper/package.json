@@ -1,0 +1,13 @@
+{
+  "name": "flipfee-keeper",
+  "version": "0.1.0",
+  "description": "flipfee keeper: brings pump.fun creator fees into each coin's vault and cranks payouts (module + CLI)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": { "flipfee-keeper": "./dist/cli.js" },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist"],
+  "peerDependencies": { "@solana/web3.js": "^1.98.0", "buffer": "^6.0.3" },
+  "license": "UNLICENSED"
+}

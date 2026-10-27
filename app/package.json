@@ -1,0 +1,39 @@
+{
+  "name": "flipfee-app",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "flipfee on Solana: buy an hour of a pump.fun coin's creator fees, or sell your coin's next hours. Phantom only.",
+  "scripts": {
+    "dev": "vite --port 5197 --strictPort",
+    "dev:fixture": "FLIPFEE_FIXTURE=1 VITE_RPC_URL=/fx/rpc vite --port 5197 --strictPort",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview --port 5198 --strictPort",
+    "copy": "node scripts/copycheck.mjs src/copy.ts",
+    "check": "npm run copy && npm run build",
+    "e2e": "node scripts/e2e.mjs",
+    "e2e:server": "node scripts/e2e.mjs --base=http://127.0.0.1:5198 --mode=server",
+    "e2e:localnet": "node scripts/localnet.mjs",
+    "perf": "node scripts/perf.mjs",
+    "assets": "node scripts/make-assets.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "5.3.0",
+    "@fontsource-variable/doto": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/martian-mono": "5.3.0",
+    "@solana/web3.js": "1.99.0",
+    "buffer": "6.0.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.2"
+  }
+}

@@ -1,0 +1,1572 @@
+{
+  "address": "D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW",
+  "metadata": {
+    "name": "flipfee",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "flipfee: sell a pump.fun coin's creator fees by the hour; the program routes every fee to the hour's buyer or the dev"
+  },
+  "instructions": [
+    {
+      "name": "buy",
+      "docs": [
+        "Buyer: `hours` (1..=12) hours of the coin's fees at the coin's price (at most `max_price` per hour), starting",
+        "no later than `max_start` (unix seconds). pump's fees of the coin must be collected first in the transaction."
+      ],
+      "discriminator": [
+        102,
+        6,
+        61,
+        18,
+        1,
+        218,
+        235,
+        234
+      ],
+      "accounts": [
+        {
+          "name": "buyer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "coin",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "coin.mint",
+                "account": "Coin"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true
+        },
+        {
+          "name": "treasury",
+          "writable": true
+        },
+        {
+          "name": "sharing_config",
+          "docs": [
+            "sell while the coin's fees still route to the vault)."
+          ]
+        },
+        {
+          "name": "bonding_curve"
+        },
+        {
+          "name": "pool",
+          "docs": [
+            "before; it may not exist yet)."
+          ]
+        },
+        {
+          "name": "pump_creator_vault",
+          "docs": [
+            "`check_fees_collected`."
+          ]
+        },
+        {
+          "name": "amm_creator_vault",
+          "docs": [
+            "`check_fees_collected` once the curve is complete (ignored before)."
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "hours",
+          "type": "u8"
+        },
+        {
+          "name": "max_price",
+          "type": "u64"
+        },
+        {
+          "name": "max_start",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "crank",
+      "docs": [
+        "Anyone: allocate new vault lamports by the second, pay the owner and the holders passed as remaining",
+        "accounts (writable), drop finished windows."
+      ],
+      "discriminator": [
+        0,
+        232,
+        3,
+        195,
+        124,
+        117,
+        105,
+        53
+      ],
+      "accounts": [
+        {
+          "name": "coin",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "coin.mint",
+                "account": "Coin"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "docs": [
+        "One-time setup, signed by the program's upgrade authority (who becomes the admin)."
+      ],
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "program",
+          "address": "D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "register",
+      "docs": [
+        "Dev (the coin's pump.fun fee sharing admin): joins a coin whose final pump split sends 100% to the vault."
+      ],
+      "discriminator": [
+        211,
+        124,
+        67,
+        15,
+        211,
+        194,
+        178,
+        240
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "docs": [
+            "The pump.fun fee sharing admin of the coin (the key that set the final split)."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "coin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  105,
+                  110
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "sharing_config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  104,
+                  97,
+                  114,
+                  105,
+                  110,
+                  103,
+                  45,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                12,
+                53,
+                255,
+                169,
+                5,
+                90,
+                142,
+                86,
+                141,
+                168,
+                247,
+                188,
+                7,
+                86,
+                21,
+                39,
+                76,
+                241,
+                201,
+                44,
+                164,
+                31,
+                64,
+                0,
+                156,
+                81,
+                106,
+                164,
+                20,
+                194,
+                124,
+                112
+              ]
+            }
+          }
+        },
+        {
+          "name": "bonding_curve",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100,
+                  105,
+                  110,
+                  103,
+                  45,
+                  99,
+                  117,
+                  114,
+                  118,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                1,
+                86,
+                224,
+                246,
+                147,
+                102,
+                90,
+                207,
+                68,
+                219,
+                21,
+                104,
+                191,
+                23,
+                91,
+                170,
+                81,
+                137,
+                203,
+                151,
+                245,
+                210,
+                255,
+                59,
+                101,
+                93,
+                43,
+                182,
+                253,
+                109,
+                24,
+                176
+              ]
+            }
+          }
+        },
+        {
+          "name": "pool"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "max_ahead",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "set_admin",
+      "docs": [
+        "Admin: hands the admin role to `new_admin` (addition to DESIGN §2.1)."
+      ],
+      "discriminator": [
+        251,
+        163,
+        0,
+        52,
+        91,
+        194,
+        187,
+        92
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_admin",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "set_config",
+      "docs": [
+        "Admin: treasury (the account passed), fee on hour sales (≤ 1000 bps), pause of `register` and `buy`."
+      ],
+      "discriminator": [
+        108,
+        158,
+        154,
+        175,
+        212,
+        98,
+        52,
+        66
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury"
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_bps",
+          "type": "u16"
+        },
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "set_terms",
+      "docs": [
+        "Owner: price per hour, hours ahead (seconds), pause of sales."
+      ],
+      "discriminator": [
+        198,
+        18,
+        197,
+        226,
+        220,
+        230,
+        87,
+        173
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true,
+          "relations": [
+            "coin"
+          ]
+        },
+        {
+          "name": "coin",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "price",
+          "type": "u64"
+        },
+        {
+          "name": "max_ahead",
+          "type": "u32"
+        },
+        {
+          "name": "paused",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "transfer_owner",
+      "docs": [
+        "Owner and new owner (both sign): hands the coin to `new_owner` (pays the old owner what it is owed first)."
+      ],
+      "discriminator": [
+        245,
+        25,
+        221,
+        175,
+        106,
+        229,
+        225,
+        45
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "coin"
+          ]
+        },
+        {
+          "name": "coin",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "coin.mint",
+                "account": "Coin"
+              }
+            ]
+          }
+        },
+        {
+          "name": "new_owner",
+          "docs": [
+            "The new owner signs too: it accepts the coin, and only an account that can sign can receive sales and fees."
+          ],
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Coin",
+      "discriminator": [
+        215,
+        195,
+        53,
+        238,
+        217,
+        196,
+        213,
+        51
+      ]
+    },
+    {
+      "name": "Config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "ConfigSet",
+      "discriminator": [
+        15,
+        104,
+        59,
+        16,
+        236,
+        241,
+        8,
+        6
+      ]
+    },
+    {
+      "name": "FeesSynced",
+      "discriminator": [
+        41,
+        98,
+        204,
+        192,
+        243,
+        3,
+        53,
+        218
+      ]
+    },
+    {
+      "name": "HoursBought",
+      "discriminator": [
+        92,
+        223,
+        253,
+        56,
+        251,
+        167,
+        97,
+        225
+      ]
+    },
+    {
+      "name": "OwnerTransferred",
+      "discriminator": [
+        89,
+        151,
+        211,
+        37,
+        242,
+        213,
+        63,
+        105
+      ]
+    },
+    {
+      "name": "Paid",
+      "discriminator": [
+        240,
+        193,
+        17,
+        238,
+        238,
+        210,
+        129,
+        235
+      ]
+    },
+    {
+      "name": "Registered",
+      "discriminator": [
+        11,
+        222,
+        10,
+        72,
+        160,
+        110,
+        165,
+        227
+      ]
+    },
+    {
+      "name": "TermsSet",
+      "discriminator": [
+        147,
+        31,
+        240,
+        211,
+        225,
+        132,
+        204,
+        188
+      ]
+    },
+    {
+      "name": "WindowDone",
+      "discriminator": [
+        164,
+        114,
+        194,
+        125,
+        38,
+        121,
+        160,
+        48
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NotUpgradeAuthority",
+      "msg": "Signer is not the program's upgrade authority"
+    },
+    {
+      "code": 6001,
+      "name": "NotAdmin",
+      "msg": "Signer is not the admin"
+    },
+    {
+      "code": 6002,
+      "name": "NotOwner",
+      "msg": "Signer is not the coin owner"
+    },
+    {
+      "code": 6003,
+      "name": "BadFeeBps",
+      "msg": "fee_bps is above 1000 (10%)"
+    },
+    {
+      "code": 6004,
+      "name": "BadTreasury",
+      "msg": "Treasury must be a system-owned, rent-exempt account"
+    },
+    {
+      "code": 6005,
+      "name": "WrongTreasury",
+      "msg": "Account is not the config treasury"
+    },
+    {
+      "code": 6006,
+      "name": "WrongOwner",
+      "msg": "Account is not the coin owner"
+    },
+    {
+      "code": 6007,
+      "name": "Paused",
+      "msg": "flipfee is paused"
+    },
+    {
+      "code": 6008,
+      "name": "CoinPaused",
+      "msg": "Sales of this coin are paused"
+    },
+    {
+      "code": 6009,
+      "name": "PriceOutOfRange",
+      "msg": "Price per hour must be 0.01 to 1000 SOL"
+    },
+    {
+      "code": 6010,
+      "name": "MaxAheadOutOfRange",
+      "msg": "Hours ahead must be 1 to 48 (3600 to 172800 seconds)"
+    },
+    {
+      "code": 6011,
+      "name": "BadHours",
+      "msg": "Buy 1 to 12 hours"
+    },
+    {
+      "code": 6012,
+      "name": "PriceAboveMax",
+      "msg": "Price per hour is above max_price"
+    },
+    {
+      "code": 6013,
+      "name": "TooFarAhead",
+      "msg": "These hours end later than the coin sells ahead"
+    },
+    {
+      "code": 6014,
+      "name": "QueueFull",
+      "msg": "The hour queue of this coin is full"
+    },
+    {
+      "code": 6015,
+      "name": "NotSharingConfig",
+      "msg": "Account is not this mint's pump.fun sharing config"
+    },
+    {
+      "code": 6016,
+      "name": "SharingNotActive",
+      "msg": "pump.fun fee sharing of this coin is not active"
+    },
+    {
+      "code": 6017,
+      "name": "SplitNotFinal",
+      "msg": "pump.fun fee split is not final yet (admin not revoked)"
+    },
+    {
+      "code": 6018,
+      "name": "SplitNotToVault",
+      "msg": "pump.fun fee split does not send 100% to the flipfee vault"
+    },
+    {
+      "code": 6019,
+      "name": "NotFeeAdmin",
+      "msg": "Signer is not the pump.fun fee sharing admin of this coin"
+    },
+    {
+      "code": 6020,
+      "name": "NotBondingCurve",
+      "msg": "Account is not this mint's pump.fun bonding curve"
+    },
+    {
+      "code": 6021,
+      "name": "CurveNotRouted",
+      "msg": "Bonding curve creator is not the sharing config: fees do not route to flipfee"
+    },
+    {
+      "code": 6022,
+      "name": "NotSolPaired",
+      "msg": "Only SOL-paired coins are supported"
+    },
+    {
+      "code": 6023,
+      "name": "CashbackCoin",
+      "msg": "Cashback coins pay no creator fee"
+    },
+    {
+      "code": 6024,
+      "name": "BadMint",
+      "msg": "Mint is not owned by a token program"
+    },
+    {
+      "code": 6025,
+      "name": "BadVault",
+      "msg": "Vault must be a system account with no data"
+    },
+    {
+      "code": 6026,
+      "name": "BadNewOwner",
+      "msg": "New owner must be a non-executable account other than the vault"
+    },
+    {
+      "code": 6027,
+      "name": "RecipientNotWritable",
+      "msg": "Recipient account must be writable"
+    },
+    {
+      "code": 6028,
+      "name": "OwnerCannotReceive",
+      "msg": "The owner cannot receive what is owed (account would stay below rent-exempt)"
+    },
+    {
+      "code": 6029,
+      "name": "VaultShort",
+      "msg": "Vault holds less than rent plus what is owed"
+    },
+    {
+      "code": 6030,
+      "name": "MathOverflow",
+      "msg": "Math overflow"
+    },
+    {
+      "code": 6031,
+      "name": "PoolNotRouted",
+      "msg": "Graduated coin: its PumpSwap pool does not pay the sharing config"
+    },
+    {
+      "code": 6032,
+      "name": "FeesNotCollected",
+      "msg": "pump.fun still holds fees of this coin: distribute them (and sweep PumpSwap's) before buying, in the same transaction"
+    },
+    {
+      "code": 6033,
+      "name": "HolderRewardCoin",
+      "msg": "Holder-rewards coins pay their creator fee to holders"
+    },
+    {
+      "code": 6034,
+      "name": "StartsTooLate",
+      "msg": "These hours would start later than max_start"
+    },
+    {
+      "code": 6035,
+      "name": "WrongPumpVault",
+      "msg": "Account is not this coin's pump.fun creator vault"
+    }
+  ],
+  "types": [
+    {
+      "name": "Coin",
+      "docs": [
+        "One coin on flipfee, PDA `[\"coin\", mint]`. Field order follows DESIGN §2.1.",
+        "",
+        "Money: the vault `[\"vault\", mint]` holds `rent_min + credited + unallocated`, where `credited =",
+        "owner_owed + Σ windows.owed` (allocated, not paid yet) and `unallocated` is what arrived from pump since the",
+        "last sync."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "docs": [
+              "The dev: gets the hour sales (minus the fee) and every fee outside sold hours."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          },
+          {
+            "name": "price",
+            "docs": [
+              "Lamports per hour (0.01 ..= 1000 SOL)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "max_ahead",
+            "docs": [
+              "Seconds from now to the end of the last sold hour, at most (3600 ..= 172800)."
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Stops `buy` of this coin. Syncs and payouts never stop."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "last_sync",
+            "docs": [
+              "Fees in the vault are allocated up to this time."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "owner_owed",
+            "type": "u64"
+          },
+          {
+            "name": "credited",
+            "docs": [
+              "Σ owed not yet paid (`owner_owed + Σ windows.owed`). The vault holds at least `rent_min + credited`."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "windows",
+            "docs": [
+              "Sorted by `start`, never overlapping. Live, queued, and ended windows not yet fully paid."
+            ],
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "Window"
+                }
+              }
+            }
+          },
+          {
+            "name": "fees_in",
+            "docs": [
+              "Lamports allocated in total (Σ of every sync, plus the vault balance carried at `register`)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "sales",
+            "docs": [
+              "Lamports buyers paid in total (`Σ price × hours`, fee included)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "hours_sold",
+            "type": "u32"
+          },
+          {
+            "name": "paid_out",
+            "docs": [
+              "Lamports the vault paid out in total (owner + holders)."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "docs": [
+        "Global settings, PDA `[\"config\"]`. Field order follows DESIGN §2.1."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Receives `fee_bps` of every hour sale. System-owned and rent-exempt."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "docs": [
+              "flipfee's cut of an hour sale (500 = 5%, at most 1000)."
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "paused",
+            "docs": [
+              "Stops `register` and `buy`. Syncs and payouts never stop."
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigSet",
+      "docs": [
+        "Emitted by `initialize`, `set_config` and `set_admin` with the full new settings."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_bps",
+            "type": "u16"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FeesSynced",
+      "docs": [
+        "`amount` lamports arrived in the vault and were allocated over `(from, to]` by overlap seconds."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "from",
+            "type": "i64"
+          },
+          {
+            "name": "to",
+            "type": "i64"
+          },
+          {
+            "name": "to_owner",
+            "docs": [
+              "Part allocated to the owner (time outside sold hours, plus rounding remainders)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "to_windows",
+            "docs": [
+              "Part allocated to windows (`amount − to_owner`)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "HoursBought",
+      "docs": [
+        "A buyer bought `hours` hours: the window `[start, end)` routes 100% of the coin's fees to `buyer`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "buyer",
+            "type": "pubkey"
+          },
+          {
+            "name": "start",
+            "type": "i64"
+          },
+          {
+            "name": "end",
+            "type": "i64"
+          },
+          {
+            "name": "hours",
+            "type": "u8"
+          },
+          {
+            "name": "price",
+            "docs": [
+              "Price per hour."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total",
+            "docs": [
+              "`price × hours`, paid by the buyer."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "to_owner",
+            "docs": [
+              "`total − fee`, paid to the coin owner at once."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "fee",
+            "docs": [
+              "`total × fee_bps / 10000` (rounded down), paid to the treasury."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "windows",
+            "docs": [
+              "Windows the coin holds after this purchase (live, queued, and ended ones not yet paid)."
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OwnerTransferred",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "paid_to_old_owner",
+            "docs": [
+              "What was owed to the old owner, paid to it before the change."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Paid",
+      "docs": [
+        "The vault paid `amount` lamports to `to`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "kind",
+            "type": {
+              "defined": {
+                "name": "PayKind"
+              }
+            }
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PayKind",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Owner"
+          },
+          {
+            "name": "Holder"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Registered",
+      "docs": [
+        "A coin joined flipfee: its pump.fun split sends 100% to `vault`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "max_ahead",
+            "type": "u32"
+          },
+          {
+            "name": "vault_funded",
+            "docs": [
+              "Lamports the owner put into the vault to make it rent-exempt (0 if it already was)."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "carried",
+            "docs": [
+              "Lamports already in the vault above rent (fees that arrived before registering), owed to the owner."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TermsSet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "max_ahead",
+            "type": "u32"
+          },
+          {
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Window",
+      "docs": [
+        "One sold stretch of time: every fee allocated to a second in `[start, end)` belongs to `holder`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "start",
+            "type": "i64"
+          },
+          {
+            "name": "end",
+            "type": "i64"
+          },
+          {
+            "name": "owed",
+            "docs": [
+              "Allocated to this window and not paid yet."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "earned",
+            "docs": [
+              "Allocated to this window in total."
+            ],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WindowDone",
+      "docs": [
+        "A window ended, was fully allocated and paid, and left the coin's queue. `earned` is its final total."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "coin",
+            "type": "pubkey"
+          },
+          {
+            "name": "holder",
+            "type": "pubkey"
+          },
+          {
+            "name": "start",
+            "type": "i64"
+          },
+          {
+            "name": "end",
+            "type": "i64"
+          },
+          {
+            "name": "earned",
+            "type": "u64"
+          },
+          {
+            "name": "at",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}

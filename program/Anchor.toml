@@ -1,0 +1,22 @@
+# flipfee on Solana. Build with the real binary (`~/.avm/bin/anchor-1.2.0 build`) or `anchor build`.
+# Nothing here targets mainnet or devnet: tests run in LiteSVM and on a local solana-test-validator with mainnet
+# clones of pump / pump_amm / pump_fees (fixtures/mainnet, refreshed by `npm run fixtures`). See DEPLOY.md.
+
+[toolchain]
+anchor_version = "1.2.0"
+# Pinned so the AVM `anchor` proxy never switches the active Solana CLI (it pairs 1.2.0 with Agave 4.1.2).
+solana_version = "4.1.2"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+flipfee = "D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW"
+
+[provider]
+cluster = "localnet"
+wallet = ".keys/deployer.json"
+
+[scripts]
+test = "cargo test"

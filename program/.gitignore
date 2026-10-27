@@ -1,0 +1,11 @@
+# build output
+target/
+node_modules/
+.anchor/
+test-ledger/
+.test-ledger*/
+client/*.tgz
+.DS_Store
+**/*.rs.bk
+# keypairs (deployer, program, keeper, test wallets) never leave this machine
+.keys/

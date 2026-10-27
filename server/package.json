@@ -1,0 +1,24 @@
+{
+  "name": "flipfee-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "flipfee server: live pump.fun creator fees (exact, per trade), the flipfee program index, SSE, Sign-In With Solana, wants, keeper host.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning src/main.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch src/main.js",
+    "test": "node --disable-warning=ExperimentalWarning --test --test-concurrency=1 test/*.test.js",
+    "test:mainnet": "node --disable-warning=ExperimentalWarning test/live/mainnet.mjs",
+    "test:localnet": "node --disable-warning=ExperimentalWarning test/live/localnet.mjs",
+    "capture": "node --disable-warning=ExperimentalWarning test/live/capture.mjs",
+    "vendor": "node scripts/vendor.mjs"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.99.0",
+    "bs58": "^6.0.0",
+    "tweetnacl": "^1.0.3"
+  }
+}

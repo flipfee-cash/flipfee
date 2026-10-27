@@ -1,0 +1,37 @@
+# systemd unit for the flipfee server (https://flipfee.cash, /api/* via Caddy → 127.0.0.1:5295; DESIGN §4).
+# Install (the lead, on the box):
+#   sudo useradd --system --home /var/lib/flipfee --shell /usr/sbin/nologin flipfee
+#   (in flipfee/program: npm run build:client && npm run build:keeper; in flipfee/server: npm run vendor)
+#   sudo mkdir -p /opt/flipfee-server && sudo cp -r server/. /opt/flipfee-server/ && cd /opt/flipfee-server && sudo npm ci --omit=dev
+#   sudo install -d -m 750 -g flipfee /etc/flipfee
+#   sudo install -m 640 -o root -g flipfee deploy/flipfee.env.example /etc/flipfee/server.env   (then edit it)
+#   keeper (only with KEEPER=1): sudo install -m 640 -o root -g flipfee keeper.json /etc/flipfee/keeper.json
+#   sudo cp deploy/flipfee-server.service /etc/systemd/system/ && sudo systemctl daemon-reload
+#   sudo systemctl enable --now flipfee-server && curl -s 127.0.0.1:5295/health
+[Unit]
+Description=flipfee server (live pump.fun creator fees, flipfee index, SSE, SIWS, keeper host)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=flipfee
+Group=flipfee
+WorkingDirectory=/opt/flipfee-server
+EnvironmentFile=/etc/flipfee/server.env
+# /var/lib/flipfee: the SQLite database (wants, sessions, fee buckets, the program's event log)
+StateDirectory=flipfee
+StateDirectoryMode=0750
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning src/main.js
+Restart=always
+RestartSec=3
+# every open SSE stream holds one socket
+LimitNOFILE=65536
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/flipfee
+
+[Install]
+WantedBy=multi-user.target
