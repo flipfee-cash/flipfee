@@ -6,6 +6,7 @@ import { board } from '../state/board.ts';
 import { PHONE, WIDE, shallow, useMedia } from '../state/store.ts';
 import { setTab, ui } from '../state/ui.ts';
 import { wallet } from '../wallet/wallet.ts';
+import { linkProps } from '../lib/router.ts';
 import { Ticker } from './Ticker.tsx';
 import { FlowHero } from './FlowHero.tsx';
 import { SectionTitle } from './SectionTitle.tsx';
@@ -91,6 +92,9 @@ function HotBoard({ me }: { me: string | null }) {
     <section className="bsec bsec-hot" id="hot" aria-labelledby="hot-h" data-testid="hot-board" data-count={hot.length}>
       <header className="bsec-h">
         <SectionTitle id="hot-h" text={copy.sections.hot} />
+        <a className="bsec-link" {...linkProps('/market')} data-testid="hot-market">
+          {copy.market.open}
+        </a>
       </header>
       {hot.length > 0 && (
         <div className="hrow hrow-head" aria-hidden="true">

@@ -1,4 +1,4 @@
-// Hate-slur filter: coin names are live user content. Names and tickers are masked, such coins
+// Hate-slur filter (forked from peek-sol): coin names are live user content. Names and tickers are masked, such coins
 // are hidden (off the board, out of the stream, no wants); plain swearing stays.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';

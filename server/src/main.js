@@ -3,7 +3,7 @@
 // → the keeper (program/keeper) when KEEPER=1. Read-only on chain unless the keeper runs.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { listen, makeHandler } from './api.js';
+import { listen, makeHandler, validMint } from './api.js';
 import { Auth } from './auth.js';
 import { Bus } from './bus.js';
 import { loadFlipfee } from './chain/flipfee.js';
@@ -26,6 +26,7 @@ import { SseHub } from './sse.js';
 import { Tracker } from './tracker.js';
 import { Views } from './views.js';
 import { Wants } from './wants.js';
+import { Orders } from './orders.js';
 import { decodeCurve } from './chain/pumpchain.js';
 import { curveOf } from './ingest/pumpevents.js';
 
@@ -39,6 +40,7 @@ export async function startServer(cfg, { listenHttp = true, WebSocketImpl = glob
   const dex = cfg.pumpApi ? new DexScreener({ fetchFn }) : null;
   const jupiter = cfg.pumpApi ? new Jupiter({ fetchFn }) : null;
   const wants = new Wants({ db, bus });
+  const orders = new Orders({ db, bus });
   const hot = cfg.hotOn && pump ? new Hot({ cfg, store, pump, dex, jupiter }) : null;
   const tracker = new Tracker({ cfg, store, hot });
   // a restart resumes the coins it followed (their records and buckets came back with the store)
@@ -72,7 +74,7 @@ export async function startServer(cfg, { listenHttp = true, WebSocketImpl = glob
 
   // chain events: the next board snapshot is rebuilt; a new coin is followed at once (its first trades count)
   bus.subscribe((ev) => {
-    if (ev.type === 'trade') return;
+    if (ev.type === 'trade' || ev.type === 'book') return;
     views.invalidate(ev.type === 'register' ? ev.mint : null);
     if (ev.type === 'register' && cfg.ingestOn) {
       queueMicrotask(() => {
@@ -127,7 +129,47 @@ export async function startServer(cfg, { listenHttp = true, WebSocketImpl = glob
     };
   };
 
-  Object.assign(app, { cfg, db, bus, store, rpc, pump, dex, jupiter, wants, hot, tracker, views, ingest, auth, sse, health, checkWantable, indexer });
+  /** The market list: coins with orders and the hottest coins, or a search (ticker, name or CA). Each row carries a
+   *  short book (3 levels a side). */
+  const market = async (q = '') => {
+    const term = String(q).trim().replace(/^\$/, '').toLowerCase().slice(0, 64);
+    let mints;
+    if (term) {
+      const ca = validMint(String(q).trim());
+      if (ca) {
+        await checkWantable(ca).catch(() => null);
+        mints = store.get(ca) && !store.hidden(store.get(ca)) ? [ca] : [];
+      } else {
+        const hits = [];
+        for (const c of store.coins.values()) {
+          if (store.hidden(c) || !c.symbol) continue;
+          const sym = c.symbol.toLowerCase();
+          const name = (c.name || '').toLowerCase();
+          const rank = sym === term ? 0 : sym.startsWith(term) ? 1 : name.startsWith(term) ? 2 : sym.includes(term) || name.includes(term) ? 3 : -1;
+          if (rank >= 0) hits.push([rank, c]);
+        }
+        mints = hits.sort((a, b) => a[0] - b[0] || (b[1].lastTradeAt ?? 0) - (a[1].lastTradeAt ?? 0)).slice(0, 30).map(([, c]) => c.mint);
+      }
+    } else {
+      const board = views.board();
+      const withOrders = orders.active(40).map((r) => r.mint);
+      mints = [...new Set([...board.live.map((r) => r.mint), ...withOrders, ...board.hot.map((r) => r.mint)])]
+        .filter((m) => store.get(m) && !store.hidden(store.get(m)))
+        .slice(0, 40);
+    }
+    return {
+      q: term,
+      coins: mints.map((m) => {
+        const r = views.row(m);
+        delete r.hourly;
+        const b = orders.book(m, { depth: 3 });
+        return { ...r, book: { bids: b.bids, asks: b.asks, bestBid: b.bestBid, bestAsk: b.bestAsk, spread: b.spread, orders: b.orders } };
+      }),
+    };
+  };
+
+  Object.assign(app, { market });
+  Object.assign(app, { cfg, db, bus, store, rpc, pump, dex, jupiter, wants, orders, hot, tracker, views, ingest, auth, sse, health, checkWantable, indexer });
   const handler = makeHandler(app);
   const server = listenHttp ? await listen(handler, cfg.port, cfg.host) : null;
 
@@ -144,6 +186,19 @@ export async function startServer(cfg, { listenHttp = true, WebSocketImpl = glob
   });
   every(30_000, () => db.setMeta('hotSet', JSON.stringify(tracker.hotMints())));
   if (cfg.ingestOn) ingest.start();
+  // flipfee's own quotes: a ladder on the 12 hottest coins around what their fees paid in the last hour
+  if (cfg.houseQuotes) {
+    const houseTick = () => {
+      const top = views.board().hot.filter((r) => views.hourKey(r) > 0).slice(0, 12);
+      if (!top.length) return; // the hot list is still loading after a start
+      const keep = new Set(top.map((r) => r.mint));
+      for (const r of top) orders.quote(r.mint, views.hourKey(r));
+      for (const { mint } of db.all("SELECT DISTINCT mint FROM orders WHERE house = 1 AND status = 'open'")) if (!keep.has(mint)) orders.quote(mint, 0);
+    };
+    setTimeout(() => void Promise.resolve().then(houseTick).catch((e) => logError('house.fail', e)), 20_000).unref?.();
+    every(60_000, houseTick);
+    every(3_600_000, () => orders.prune());
+  }
   if (indexer) await indexer.start();
 
   // the program builder's client may land while we run: switch to it (and to its program id) when it does

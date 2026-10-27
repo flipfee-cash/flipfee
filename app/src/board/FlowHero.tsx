@@ -1,4 +1,4 @@
-// The home hero as a live money map: a typed line names a hot
+// The home hero as a live money map (owner, 2026-10-26: "an interesting hero, like treg.to"): a typed line names a hot
 // coin; its real trades stream in on the left, each paying a creator fee; the wires run into the coin's flipfee vault
 // (the dithered coin) and out to the two who get paid: the buyer of the hour, and the dev for every other hour.
 // The typed coin changes every few seconds and the whole map follows it. Reduced motion: no typing, no running wires.
@@ -15,7 +15,7 @@ import { CoinImg } from '../shell/CoinImg.tsx';
 import { Flap } from '../flap/Flap.tsx';
 import { HeaderField } from '../shell/HeaderField.tsx';
 import { VaultScene } from '../dither/VaultScene.tsx';
-import { focusFirstLive, focusHot } from './Board.tsx';
+import { HeroBids } from './HeroBids.tsx';
 
 const CYCLE_MS = 7000;
 const ROWS = 5;
@@ -83,7 +83,6 @@ function useTrades(mint: string | null): Trade[] {
 export function FlowHero() {
   const mint = useCycle();
   const coin = board.use((s) => (mint ? s.coins[mint] : undefined));
-  const live = board.use((s) => s.live.length > 0);
   const trades = useTrades(mint);
   const tk = coin ? tick(coin.symbol) : '';
   const est = coin?.fees.est.h1 ? '~' : '';
@@ -191,20 +190,7 @@ export function FlowHero() {
         </div>
       </div>
 
-      <div className="fh-cta">
-        {live ? (
-          <button type="button" className="btn btn-cash btn-lg" onClick={focusFirstLive} data-testid="hero-buy">
-            {copy.hero.buy}
-          </button>
-        ) : (
-          <button type="button" className="btn btn-cash btn-lg" onClick={focusHot} data-testid="hero-hot">
-            {copy.live.emptyHot}
-          </button>
-        )}
-        <a className="btn btn-line btn-lg" data-testid="hero-flip" {...linkProps('/dev')}>
-          {copy.live.emptyCta}
-        </a>
-      </div>
+      <HeroBids />
     </section>
   );
 }

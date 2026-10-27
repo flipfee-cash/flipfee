@@ -30,9 +30,9 @@ const PROGRAM = 'D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW';
 
 export function Footer() {
   const cols: [string, [string, string, boolean][]][] = [
-    [copy.foot.product, [['/', copy.nav.board, false], ['/dev', copy.nav.dev, false], ['/me', copy.nav.me, false], ['/docs', copy.nav.docs, false]]],
+    [copy.foot.product, [['/', copy.nav.board, false], ['/market', copy.nav.market, false], ['/dev', copy.nav.dev, false], ['/me', copy.nav.me, false], ['/docs', copy.nav.docs, false]]],
     [copy.foot.legal, [['/terms', copy.legal.terms, false], ['/privacy', copy.legal.privacy, false]]],
-    [copy.foot.links, [['https://x.com/flipfeecash', 'X @flipfeecash', true], ['https://pump.fun', copy.pf, true], ['https://solscan.io/account/' + PROGRAM, copy.foot.solscan, true], ['https://phantom.app', 'Phantom', true]]],
+    [copy.foot.links, [['https://x.com/flipfeecash', 'X @flipfeecash', true], ['https://github.com/flipfee-cash/flipfee', copy.foot.github, true], ['https://pump.fun', copy.pf, true], ['https://solscan.io/account/' + PROGRAM, copy.foot.solscan, true], ['https://phantom.app', 'Phantom', true]]],
   ];
   return (
     <footer className="foot">

@@ -1,4 +1,4 @@
-// The flipfee coin in ordered dither. Each coin is a real cylinder (a face, a reeded
+// The flipfee coin in ordered dither (owner, 2026-10-26: dither style). Each coin is a real cylinder (a face, a reeded
 // edge) ray-cast per cell: turned around its upright axis (theta) and tipped toward the viewer (phi), lit from the
 // upper left, then thresholded against an 8×8 Bayer matrix and painted in ink. A silhouette pass draws a one-cell
 // outline, so the shape reads at any size. Several coins share one depth buffer, so they pass in front of each other.

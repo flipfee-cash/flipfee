@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # flipfee release (DESIGN.md §4): build the client, keeper and app, upload to the box, restart, health check.
-# Run it from any folder. FLIPFEE_HOST (user@host) and FLIPFEE_SSH_KEY are required:
+# Run it on your Mac from any folder:
 #
-#   bash release.sh              build, check the copy, upload the site and the server, restart
-#   bash release.sh --app-only   the site only (the server keeps running)
-#   bash release.sh --dry-run    build and check; the box stays as it is
+#   bash flipfee/release.sh              build, check the copy, upload the site and the server, restart
+#   bash flipfee/release.sh --app-only   the site only (the server keeps running)
+#   bash flipfee/release.sh --dry-run    build and check; the box stays as it is
 #
-# The box: the site in /srv/flipfee (Caddy: flipfee.cash, /api/* → 127.0.0.1:5295), the server in
+# The box: the site in /srv/ft1/flipfee (Caddy: flipfee.cash, /api/* → 127.0.0.1:5295), the server in
 # /opt/flipfee-server (unit flipfee-server, settings /etc/flipfee/server.env, data /var/lib/flipfee).
 set -euo pipefail
 
@@ -16,9 +16,9 @@ cd "$HERE"
 say() { printf '\033[1m▸ %s\033[0m\n' "$*"; }
 die() { printf '\033[31m✖ %s\033[0m\n' "$*" >&2; exit 1; }
 
-HOST="${FLIPFEE_HOST:-}"
-KEY="${FLIPFEE_SSH_KEY:-}"
-SITE="${FLIPFEE_SITE:-https://flipfee.cash}"
+HOST="${FLIPFEE_HOST:-root@5.75.168.69}"
+KEY="${FLIPFEE_SSH_KEY:-$HOME/.ssh/kiln_deploy}"
+SITE="https://flipfee.cash"
 
 APP_ONLY=0
 DRY=0
@@ -30,8 +30,7 @@ for a in "$@"; do
     *) die "unknown flag: $a (see --help)" ;;
   esac
 done
-[ "$DRY" = 1 ] || [ -n "$HOST" ] || die "set FLIPFEE_HOST (user@host)"
-[ "$DRY" = 1 ] || [ -f "$KEY" ] || die "no SSH key at $KEY (set FLIPFEE_SSH_KEY)"
+[ -f "$KEY" ] || die "no SSH key at $KEY (set FLIPFEE_SSH_KEY)"
 
 say "program client and keeper"
 (cd program && npm run --silent build:client && npm run --silent build:keeper)
@@ -57,8 +56,8 @@ done
 trap 'ssh -S "$SOCK" -O exit "$HOST" 2>/dev/null || true' EXIT
 RSH="ssh -S $SOCK"
 
-say "site → /srv/flipfee"
-rsync -az --delete -e "$RSH" app/dist/ "$HOST:/srv/flipfee/"
+say "site → /srv/ft1/flipfee"
+rsync -az --delete -e "$RSH" app/dist/ "$HOST:/srv/ft1/flipfee/"
 
 if [ "$APP_ONLY" = 0 ]; then
   say "server → /opt/flipfee-server, restart"

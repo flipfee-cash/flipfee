@@ -1334,7 +1334,6 @@ p.live-empty {
   padding: 0;
   display: grid;
   gap: 6px;
-  overflow: hidden;
   border-radius: var(--r-l);
 }
 .mw-row {
@@ -1536,7 +1535,7 @@ p.live-empty {
   background: var(--cash-dim);
 }
 
-/* the hero as three labelled parts: a step line above each, infographic inside */
+/* the hero as three labelled parts (owner, 2026-10-27): a step line above each, infographic inside */
 .fh-col {
   display: grid;
   gap: 12px;
@@ -1685,7 +1684,7 @@ p.live-empty {
   flex-wrap: nowrap;
 }
 
-/* step captions: small, plain mono, no rule, floating gently one after another */
+/* step captions (owner, 2026-10-27): small, plain mono, no rule, floating gently one after another */
 .fh-step {
   font-family: var(--font-mono);
   font-weight: 500;
@@ -1711,4 +1710,164 @@ p.live-empty {
   .fh-step {
     animation: none;
   }
+}
+
+/* ───────── the hottest coin's book under the hero (src/board/HeroBids.tsx, owner 2026-10-28) ───────── */
+.hb {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 1040px);
+  margin-top: 18px;
+  padding: 14px 16px 16px;
+  border-radius: var(--r-l);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  text-align: left;
+}
+.hb.is-bare {
+  display: flex;
+  justify-content: center;
+  background: none;
+  box-shadow: none;
+}
+.hb-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+}
+.hb-tk {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--cash);
+}
+.hb-best {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--label);
+  white-space: nowrap;
+}
+.hb-best b {
+  font-size: 18px;
+  color: var(--cash);
+}
+.hb-book {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--rule);
+}
+.hb-col {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+.hb-colh {
+  margin: 0;
+  font-size: 11px;
+}
+.hb-col:last-child .hb-colh {
+  text-align: right;
+}
+.hb-side {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.hb-row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+/* asks mirror bids: price on the outside, bars grow from the middle */
+.hb-side.is-ask .hb-row {
+  grid-template-columns: 28px minmax(0, 1fr) 64px;
+}
+.hb-side.is-ask .hb-p { order: 3; text-align: right; color: var(--ink); }
+.hb-side.is-ask .hb-h { order: 1; text-align: left; }
+.hb-side.is-ask .hb-track { order: 2; }
+.hb-side.is-bid .hb-track { direction: rtl; }
+.hb-p {
+  font-weight: 600;
+  color: var(--cash);
+}
+.hb-track {
+  height: 16px;
+  border-radius: var(--r-s);
+  background: var(--panel-2);
+  overflow: hidden;
+}
+.hb-track i {
+  display: block;
+  height: 100%;
+  border-radius: var(--r-s);
+  background: conic-gradient(var(--cash) 25%, transparent 0 50%, var(--cash) 0 75%, transparent 0) 0 0 / 2px 2px;
+  opacity: 0.55;
+  transition: width 0.4s var(--ease-out);
+}
+.hb-side.is-ask .hb-track i {
+  background: conic-gradient(var(--ink) 25%, transparent 0 50%, var(--ink) 0 75%, transparent 0) 0 0 / 2px 2px;
+  opacity: 0.35;
+}
+.hb-side.is-bid .hb-row.is-best .hb-track i { background: var(--cash); opacity: 1; }
+.hb-side.is-ask .hb-row.is-best .hb-track i { background: var(--ink); opacity: 0.85; }
+.hb-h {
+  color: var(--label);
+  text-align: right;
+}
+.hb-none {
+  font-size: 12.5px;
+}
+.hb-sk {
+  display: block;
+  height: 76px;
+}
+@media (max-width: 760px) {
+  .hb-top { flex-wrap: wrap; }
+  .hb-cta { width: 100%; order: 5; }
+  .hb-book { grid-template-columns: 1fr; }
+  .hb-col:last-child .hb-colh { text-align: left; }
+}
+
+/* ───────── a coin's book on hover (src/market/BookPeek.tsx) ───────── */
+.bpeek {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 6px);
+  right: 16px;
+  width: 260px;
+  padding: 10px 8px 8px;
+  border-radius: var(--r-l);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule-2), 0 12px 32px rgba(14, 14, 16, 0.14);
+  pointer-events: none;
+  cursor: default;
+  animation: bpeek-in 0.14s var(--ease-out) both;
+}
+.bpeek-h {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 8px 6px;
+  font-size: 13px;
+}
+.bpeek-h .mono {
+  margin-left: auto;
+  font-size: 11.5px;
+}
+@keyframes bpeek-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+.hrow:hover,
+.mw-row:hover {
+  z-index: 31;
 }

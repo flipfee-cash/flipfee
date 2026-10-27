@@ -1,4 +1,4 @@
-// /docs: how flipfee works, in pictures and numbers: where the SOL goes, one example day, a
+// /docs (owner, 2026-10-26): how flipfee works, in pictures and numbers: where the SOL goes, one example day, a
 // backtest of buying at the suggested price, what a dev gets, and the rules. Every chart uses the example data in
 // sample.ts and says so.
 import { useMemo } from 'react';

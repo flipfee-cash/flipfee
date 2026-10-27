@@ -1,5 +1,5 @@
 // A sheet: a centered panel on wide screens, a bottom sheet on phones (drag the grip down to close). Stays mounted for
-// the exit motion. Escape closes; focus moves in and comes back.
+// the exit motion. Escape closes; focus moves in and comes back. (Adapted from peek-sol.)
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { copy } from '../copy.ts';

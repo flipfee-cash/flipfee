@@ -1,4 +1,4 @@
-// One SVG filter for every coin image: grey levels, a 4×4 Bayer screen, a hard
+// One SVG filter for every coin image (owner, 2026-10-26: dither style): grey levels, a 4×4 Bayer screen, a hard
 // threshold, then ink on paper. It runs in the compositor on cross-origin images (nothing reads the pixels back).
 const BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const tile =

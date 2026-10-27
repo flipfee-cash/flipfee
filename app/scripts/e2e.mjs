@@ -104,9 +104,9 @@ async function watch(browser, label, phone) {
   const emptyLive = await page.locator('[data-testid=live-empty]').count();
   check(`${label}: board rows`, liveRows + hotRows > 0, `${liveRows} live · ${hotRows} hot${emptyLive ? ' · the empty live board' : ''}`);
   const conn = await page
-    .waitForFunction(() => document.querySelector('[data-testid=conn]')?.getAttribute('data-conn') === 'live', null, { timeout: 8000 })
+    .waitForFunction(() => document.querySelector('[data-testid=top]')?.getAttribute('data-conn') === 'live', null, { timeout: 8000 })
     .then(() => 'live')
-    .catch(async () => page.locator('[data-testid=conn]').getAttribute('data-conn'));
+    .catch(async () => page.locator('[data-testid=top]').getAttribute('data-conn'));
   check(`${label}: stream connected`, conn === 'live', conn);
   // numbers move: the counter (or the first row's this-hour) flips within 20 s
   const sel = (await page.locator('[data-testid=counter-total]').count()) ? '[data-testid=counter-total]' : '[data-testid=tk-fees]';

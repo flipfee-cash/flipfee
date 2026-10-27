@@ -15,6 +15,10 @@
 //   POST /api/auth/nonce {address} · POST /api/auth/verify {message|signedMessage, signature} · GET /api/auth/me ·
 //   POST /api/auth/logout
 //   POST /api/want {mint}  (session) → { mint, count, wanted, added }
+//   GET  /api/market?q=    { q, coins: [Row + book: { bids, asks (3 levels), bestBid, bestAsk, spread, orders }] }
+//   GET  /api/book/:mint   { mint, bids, asks: [Amount + { hours, orders, house, mine }], bestBid, bestAsk, spread,
+//                          mid, orders, mine: [Order] }  ·  POST /api/orders {mint, side: bid|ask, price (SOL/hour),
+//                          hours} (session) → { order, book }  ·  DELETE /api/orders/:id  ·  GET /api/orders/mine
 //   GET  /health (= /api/health): components, tracking, RPC load, index, keeper
 //
 // Row: { mint, symbol, name, image, createdAt, ageSec, mcapUsd, priceSol, priceUsd, graduated, venue: curve|amm,
@@ -125,7 +129,7 @@ export function makeHandler(app, limiter = new Limiter()) {
     if (origin && auth.allowed(origin)) {
       cors['access-control-allow-origin'] = origin;
       cors['access-control-allow-headers'] = 'authorization, content-type, last-event-id';
-      cors['access-control-allow-methods'] = 'GET, POST, OPTIONS';
+      cors['access-control-allow-methods'] = 'GET, POST, DELETE, OPTIONS';
       cors['access-control-max-age'] = '600';
       cors.vary = 'Origin';
     }
@@ -210,6 +214,40 @@ export function makeHandler(app, limiter = new Limiter()) {
         if (!mint) throw httpError(400, 'badMint');
         await app.checkWantable(mint);
         return send(200, app.wants.add(a, mint));
+      }
+
+      // ── Order book (orders.js): intents, no settlement yet
+      if (req.method === 'GET' && path === '/api/market') {
+        limit('market', 120);
+        return send(200, await app.market(q('q') ?? ''));
+      }
+      if (req.method === 'GET' && (m = /^\/api\/book\/([^/]+)$/.exec(path))) {
+        limit('book', 240);
+        const mint = validMint(decodeURIComponent(m[1]));
+        if (!mint) throw httpError(400, 'badMint');
+        return send(200, app.orders.book(mint, { wallet: me() }));
+      }
+      if (req.method === 'POST' && path === '/api/orders') {
+        const a = needMe();
+        limit('order', 30, a);
+        const b = await readBody(req);
+        const mint = validMint(b?.mint);
+        if (!mint) throw httpError(400, 'badMint');
+        await app.checkWantable(mint);
+        const sol = Number(b?.price);
+        const price = Number.isFinite(sol) ? Math.round(sol * 1e9) : NaN;
+        const o = app.orders.place(a, { mint, side: b?.side, price, hours: Number(b?.hours) });
+        return send(200, { order: o, book: app.orders.book(mint, { wallet: a }) });
+      }
+      if (req.method === 'DELETE' && (m = /^\/api\/orders\/([^/]+)$/.exec(path))) {
+        const a = needMe();
+        limit('order', 30, a);
+        const r = app.orders.cancel(a, decodeURIComponent(m[1]));
+        return send(200, r);
+      }
+      if (req.method === 'GET' && path === '/api/orders/mine') {
+        const a = needMe();
+        return send(200, { orders: app.orders.of(a) });
       }
 
       // ── Sign-In With Solana

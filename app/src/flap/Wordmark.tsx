@@ -1,4 +1,4 @@
-// The flipfee wordmark: the dithered coin, which flips on load and on hover, and
+// The flipfee wordmark (owner, 2026-10-26: dither style): the dithered coin, which flips on load and on hover, and
 // "flipfee" in dot-matrix letters; ".cash" in ink beside it: flip fee → cash.
 import { DitherCoin } from '../dither/DitherCoin.tsx';
 

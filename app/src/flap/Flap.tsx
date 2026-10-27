@@ -1,4 +1,4 @@
-// Live numbers in a dot-matrix face. A character that changes is written at once
+// Live numbers in a dot-matrix face (owner, 2026-10-26: dither style). A character that changes is written at once
 // and dithers in: an ordered-dither mask lets 25%, 50%, 75% of its dots through, then all of it (~160 ms), staggered from
 // the first changed character. The DOM per character is fixed and written imperatively, so React only re-renders the
 // characters that changed. Reduced motion, or off screen: the characters change in place.

@@ -1,4 +1,4 @@
-// PumpPortal data feed (wss://pumpportal.fun/api/data): one connection for the whole server, as
+// PumpPortal data feed (wss://pumpportal.fun/api/data, forked from peek-sol): one connection for the whole server, as
 // PumpPortal asks. subscribeNewToken (launches: the creator of a new coin at once) and subscribeMigration
 // (graduations: a tracked curve moves to its PumpSwap pool). PUMPPORTAL_API_KEY is passed when set. flipfee takes its
 // trades from the program logs (curvelogs.js), never from here: PumpPortal's trade messages carry no creator fee.

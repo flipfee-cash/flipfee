@@ -1,4 +1,4 @@
-// Trades of the tracked coins with their exact creator fees: one RPC WebSocket (mainnet; the
+// Trades of the tracked coins with their exact creator fees (forked from peek-sol): one RPC WebSocket (mainnet; the
 // local validator in a localnet test), `logsSubscribe` with `mentions: [address]` per tracked coin: its bonding curve
 // while on pump.fun (TradeEvent), its PumpSwap pool once graduated (BuyEvent / SellEvent). Every successful
 // transaction's logs are decoded (pumpevents.js). Subscriptions are paced, kept in step with the tracker's target set,

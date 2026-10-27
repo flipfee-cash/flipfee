@@ -9,7 +9,7 @@
     "dev:fixture": "FLIPFEE_FIXTURE=1 VITE_RPC_URL=/fx/rpc vite --port 5197 --strictPort",
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview --port 5198 --strictPort",
-    "copy": "node scripts/copycheck.mjs src/copy.ts",
+    "copy": "node ../../shared/copycheck.mjs src/copy.ts",
     "check": "npm run copy && npm run build",
     "e2e": "node scripts/e2e.mjs",
     "e2e:server": "node scripts/e2e.mjs --base=http://127.0.0.1:5198 --mode=server",

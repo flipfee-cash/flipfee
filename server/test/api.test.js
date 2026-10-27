@@ -184,6 +184,37 @@ test('wants: sign in, one per wallet per coin, counts, the stream event, Me list
   assert.equal((await post('/api/want', { mint: bad }, h1)).status, 403);
 });
 
+test('order book: sign in, bid and ask, crossing refused, cancel, the stream event, market search', async () => {
+  const w = kp();
+  assert.equal((await post('/api/orders', { mint: MINT, side: 'bid', price: 0.1, hours: 2 })).status, 401);
+  const h = await signIn(w);
+  let r = await post('/api/orders', { mint: MINT, side: 'bid', price: 0.1, hours: 2 }, h);
+  assert.equal(r.status, 200);
+  assert.equal(r.body.order.price.lamports, '100000000');
+  assert.equal(r.body.book.bestBid.sol, 0.1);
+  assert.equal(r.body.book.mine.length, 1);
+  r = await post('/api/orders', { mint: MINT, side: 'ask', price: 0.25, hours: 1 }, h);
+  assert.equal(r.status, 200);
+  assert.equal((await post('/api/orders', { mint: MINT, side: 'bid', price: 0.3, hours: 1 }, h)).status, 409, 'crosses the ask');
+  assert.equal((await post('/api/orders', { mint: MINT, side: 'bid', price: 'x', hours: 1 }, h)).status, 400);
+  assert.equal(app.bus.recent({ types: new Set(['book']) }).at(-1).mint, MINT);
+  const book = (await get(`/api/book/${MINT}`)).body;
+  assert.equal(book.spread.sol, 0.15);
+  assert.deepEqual(book.mine, [], 'no session: no own orders');
+  const mine = (await get('/api/orders/mine', h)).body.orders;
+  assert.equal(mine.length, 2);
+  const del = await fetch(`${base}/api/orders/${mine[0].id}`, { method: 'DELETE', headers: h });
+  assert.equal(del.status, 200);
+  assert.equal((await get('/api/orders/mine', h)).body.orders.length, 1);
+  // the market lists coins with orders and finds coins by ticker, name or CA
+  const m = (await get('/api/market')).body;
+  assert.ok(m.coins.some((c) => c.mint === MINT && c.book.orders === 1));
+  assert.equal((await get('/api/market?q=%24cat')).body.coins[0].mint, MINT);
+  assert.equal((await get('/api/market?q=cat%20co')).body.coins[0].mint, MINT);
+  assert.equal((await get(`/api/market?q=${MINT}`)).body.coins[0].symbol, 'CAT');
+  assert.deepEqual((await get('/api/market?q=zzzz')).body.coins, []);
+});
+
 test('dev: the wallet’s coins from chain and flipfee, with eligibility, wants, metrics and a suggested price', async () => {
   const { status, body } = await get(`/api/dev/${dev.publicKey.toBase58()}`);
   assert.equal(status, 200);

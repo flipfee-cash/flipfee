@@ -51,17 +51,19 @@ export function Bars({ bars, height = 160, title, legend, every = 1 }: { bars: B
           <span key={i}>{i % every === 0 ? b.label : ''}</span>
         ))}
       </div>
-      <table className="sr">
-        <caption>{title}</caption>
-        <tbody>
-          {bars.map((b, i) => (
-            <tr key={i}>
-              <th scope="row">{b.label}</th>
-              <td>{b.tip}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="sr">
+        <table>
+          <caption>{title}</caption>
+          <tbody>
+            {bars.map((b, i) => (
+              <tr key={i}>
+                <th scope="row">{b.label}</th>
+                <td>{b.tip}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   );
 }

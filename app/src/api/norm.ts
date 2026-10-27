@@ -1,6 +1,6 @@
 // Wire → app shapes. The server sends amounts as lamport strings plus SOL numbers (DESIGN.md §2.2) and times as ms or
 // unix seconds; these readers accept either, so a renamed field shows up as a 0 here instead of a crash in a view.
-import type { Board, Coin, CoinPage, DevCoin, DevReply, Eligibility, FF, Fees, MeReply, MyHour, Seg, Stats, StreamEvent, ThisHour, Timeline, Trade, Win } from './types.ts';
+import type { Board, Book, Coin, Level, Order, CoinPage, DevCoin, DevReply, Eligibility, FF, Fees, MeReply, MyHour, Seg, Stats, StreamEvent, ThisHour, Timeline, Trade, Win } from './types.ts';
 
 type O = Record<string, unknown>;
 
@@ -349,7 +349,59 @@ export function streamEvent(type: string, x: unknown): StreamEvent | null {
     }
     case 'want':
       return mint ? { type, mint, count: num(x.count ?? x.wants), wallet: str(x.wallet) || undefined } : null;
+    case 'book':
+      return mint ? { type, mint } : null;
     default:
       return null;
   }
+}
+
+const solAmt = (v: unknown): number | null => {
+  if (v === null || v === undefined) return null;
+  const o = v as { sol?: unknown; lamports?: unknown };
+  if (typeof o.lamports === 'string' && /^\d+$/.test(o.lamports)) return Number(o.lamports) / 1e9;
+  return Number.isFinite(Number(o.sol)) ? Number(o.sol) : null;
+};
+
+function level(x: unknown): Level | null {
+  const o = (x ?? {}) as Record<string, unknown>;
+  const price = solAmt(o);
+  if (price === null) return null;
+  return { price, hours: num(o.hours), orders: num(o.orders), house: o.house === true, mine: num(o.mine) };
+}
+
+export function order(x: unknown): Order | null {
+  const o = (x ?? {}) as Record<string, unknown>;
+  const price = solAmt(o.price);
+  if (typeof o.id !== 'string' || price === null || (o.side !== 'bid' && o.side !== 'ask')) return null;
+  return { id: o.id, mint: str(o.mint), side: o.side, price, hours: num(o.hours), t: num(o.t), house: o.house === true };
+}
+
+/** GET /api/book/:mint (and the short book on market rows). */
+export function book(x: unknown, mint = ''): Book {
+  const o = (x ?? {}) as Record<string, unknown>;
+  const list = (v: unknown) => (Array.isArray(v) ? v.map(level).filter((l): l is Level => !!l) : []);
+  return {
+    mint: str(o.mint) || mint,
+    bids: list(o.bids),
+    asks: list(o.asks),
+    bestBid: solAmt(o.bestBid),
+    bestAsk: solAmt(o.bestAsk),
+    spread: solAmt(o.spread),
+    mid: solAmt(o.mid),
+    orders: num(o.orders),
+    mine: Array.isArray(o.mine) ? o.mine.map(order).filter((r): r is Order => !!r) : [],
+  };
+}
+
+/** GET /api/market: rows with a short book each. */
+export function market(x: unknown): { coin: Coin; book: Book }[] {
+  const list = (x as { coins?: unknown } | null)?.coins;
+  if (!Array.isArray(list)) return [];
+  const out: { coin: Coin; book: Book }[] = [];
+  for (const r of list) {
+    const c = coin(r);
+    if (c) out.push({ coin: c, book: book((r as { book?: unknown }).book, c.mint) });
+  }
+  return out;
 }

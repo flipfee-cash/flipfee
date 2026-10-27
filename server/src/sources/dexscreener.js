@@ -1,4 +1,4 @@
-// DexScreener: pair data per coin (price, market cap, liquidity, volume and trades over
+// DexScreener (forked from peek-sol): pair data per coin (price, market cap, liquidity, volume and trades over
 // 5m/1h/6h/24h) for the Hot list's ranking and estimates, 30 mints per request. Limit: 300 requests per minute.
 import { Source } from '../net.js';
 

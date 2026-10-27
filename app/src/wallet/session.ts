@@ -1,4 +1,4 @@
-// Sign-In With Solana: POST /api/auth/nonce → the wallet signs the server's message → POST /api/auth/verify → a bearer
+// Sign-In With Solana (copied from peek-sol): POST /api/auth/nonce → the wallet signs the server's message → POST /api/auth/verify → a bearer
 // token for 24 h. One signature a day per wallet; the token lives in localStorage under the wallet address.
 import { createStore } from '../state/store.ts';
 import { ApiError, post, setAuth } from '../api/http.ts';

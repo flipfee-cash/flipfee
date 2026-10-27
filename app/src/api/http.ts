@@ -22,7 +22,7 @@ export function setAuth(get: () => string | null, on401: () => void): void {
 export const API_BASE = '/api';
 
 interface Opts {
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'DELETE';
   body?: unknown;
   /** 'need': fails without a session. 'try': adds the token when there is one. */
   auth?: 'need' | 'try';
@@ -75,3 +75,4 @@ export async function api<T>(path: string, o: Opts = {}): Promise<T> {
 
 export const get = <T>(path: string, o: Omit<Opts, 'method' | 'body'> = {}) => api<T>(path, o);
 export const post = <T>(path: string, body: unknown, o: Omit<Opts, 'method' | 'body'> = {}) => api<T>(path, { ...o, method: 'POST', body });
+export const del = <T>(path: string, o: Omit<Opts, 'method' | 'body'> = {}) => api<T>(path, { ...o, method: 'DELETE' });

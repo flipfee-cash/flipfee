@@ -1,4 +1,4 @@
-// Example data for the docs, dev and me pages. Fixed
+// Example data for the docs, dev and me pages (owner, 2026-10-26: "demo data for the charts and backtests"). Fixed
 // seed, so the numbers stay the same on every visit; every chart that uses it is labelled "Example data". The model:
 // a coin's creator fees per hour follow a daily rhythm with noise; a buyer pays the suggested price (80% of the last
 // hour's fees) and gets whatever the next hour pays.

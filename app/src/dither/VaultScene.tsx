@@ -1,4 +1,4 @@
-// The hero scene: the coin's flipfee vault in the middle, five
+// The hero scene (owner, 2026-10-26: "more coins, interactive, smooth"): the coin's flipfee vault in the middle, five
 // coins on a tipped orbit around it, all ray-cast and dithered into one canvas. Drag to spin the vault (it keeps the
 // spin and slows down); click, tap or Enter flips it and throws the orbit wide, then it settles. Each real trade on the
 // coin sends a small coin in from the left into the vault. Off screen or in a hidden tab: no frames. Reduced motion:

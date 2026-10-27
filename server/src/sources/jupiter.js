@@ -1,4 +1,4 @@
-// Jupiter lite API: SOL/USD and token USD prices (price/v3, up to 50 ids per call) and the
+// Jupiter lite API (forked from peek-sol): SOL/USD and token USD prices (price/v3, up to 50 ids per call) and the
 // top traded / trending lists (tokens/v2/toptraded, toptrending) that feed the Hot list's candidates with their 1h
 // volume. Budget: 1 request per second.
 import { Source } from '../net.js';

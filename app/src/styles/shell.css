@@ -74,54 +74,6 @@
   gap: 8px;
 }
 
-.live-dot {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 8px;
-  font-size: 11.5px;
-  font-weight: 650;
-  font-stretch: 84%;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--label);
-}
-.live-dot i {
-  position: relative;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--label-2);
-}
-.live-dot.is-live i {
-  background: var(--cash);
-}
-/* the live ring: transform and opacity only */
-.live-dot.is-live i::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--cash);
-  animation: live-ring 2.4s ease-out infinite;
-}
-@keyframes live-ring {
-  from {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  to {
-    transform: scale(2.8);
-    opacity: 0;
-  }
-}
-.live-dot.is-live {
-  color: var(--cash);
-}
-.live-dot.is-retry i {
-  background: var(--amber);
-}
-
 .btn-connect {
   gap: 9px;
   padding: 0 14px 0 10px;
@@ -439,10 +391,10 @@
   background: var(--panel-3);
   box-shadow: inset 0 0 0 1px var(--rule);
 }
-.coin-img img {
+.coin-img svg {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
 .coin-img b {
   font-family: var(--font-mono);
@@ -488,9 +440,6 @@
   .top-nav {
     display: none;
   }
-  .live-dot .live-t {
-    display: none;
-  }
   .top-sound {
     width: 36px;
   }
@@ -507,11 +456,6 @@
   }
 }
 
-/* coin images in ink dither (src/dither/DitherDefs.tsx) */
-.coin-img img {
-  filter: url(#ff-dither);
-}
-
 /* the header's dot field (src/shell/HeaderField.tsx) sits behind the bar's content */
 .top-field {
   position: absolute;
@@ -525,7 +469,7 @@
   z-index: 1;
 }
 
-/* the floating header: full width at the top; as the page scrolls it narrows into a floating
+/* the floating header (owner, 2026-10-26): full width at the top; as the page scrolls it narrows into a floating
    pill with a rule and a soft shadow (--hdr: 0 at the top … 1 after 140 px, set from TopBar.tsx) */
 :root {
   --hdr: 0;
@@ -554,6 +498,20 @@
   }
 }
 
-.live-dot .live-t {
-  display: none;
+
+/* narrow phones: the header fits the mark, X, GitHub and Connect in one row */
+@media (max-width: 420px) {
+  .top-in {
+    padding: 0 10px 0 14px;
+    gap: 6px;
+  }
+  .top-right {
+    gap: 2px;
+  }
+  .top-right .icon-btn {
+    width: 32px;
+  }
+  .top .btn-connect {
+    padding: 0 12px;
+  }
 }

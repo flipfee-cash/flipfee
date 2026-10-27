@@ -17,15 +17,17 @@ const loadCoin = () => import('./coin/CoinPage.tsx');
 const loadDev = () => import('./dev/DevPage.tsx');
 const loadMe = () => import('./me/MePage.tsx');
 const loadDocs = () => import('./docs/DocsPage.tsx');
+const loadMarket = () => import('./market/MarketPage.tsx');
 const CoinPage = lazy(() => loadCoin().then((m) => ({ default: m.CoinPage })));
 const DevPage = lazy(() => loadDev().then((m) => ({ default: m.DevPage })));
 const MePage = lazy(() => loadMe().then((m) => ({ default: m.MePage })));
 const DocsPage = lazy(() => loadDocs().then((m) => ({ default: m.DocsPage })));
+const MarketPage = lazy(() => loadMarket().then((m) => ({ default: m.MarketPage })));
 const LegalPage = lazy(() => import('./docs/LegalPage.tsx').then((m) => ({ default: m.LegalPage })));
 const ConnectCoinSheet = lazy(() => loadDev().then((m) => ({ default: m.ConnectCoinSheet })));
 
 function prefetchPages(): void {
-  const go = () => void Promise.all([loadCoin(), loadDev(), loadMe(), loadDocs()]).catch(() => null);
+  const go = () => void Promise.all([loadCoin(), loadDev(), loadMe(), loadDocs(), loadMarket()]).catch(() => null);
   const w = window as Window & { requestIdleCallback?: (fn: () => void, o?: { timeout: number }) => number };
   if (w.requestIdleCallback) w.requestIdleCallback(go, { timeout: 4000 });
   else window.setTimeout(go, 2500);
@@ -70,6 +72,9 @@ export function App() {
       break;
     case 'docs':
       page = <DocsPage />;
+      break;
+    case 'market':
+      page = <MarketPage />;
       break;
     case 'terms':
     case 'privacy':

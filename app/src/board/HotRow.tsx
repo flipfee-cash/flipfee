@@ -10,10 +10,12 @@ import { CoinImg } from '../shell/CoinImg.tsx';
 import { IconShare } from '../shell/Icons.tsx';
 import { TradeDots } from './TradeDots.tsx';
 import { shareCoin, wantCoin, wants } from './actions.ts';
+import { BookPeek, usePeek } from '../market/BookPeek.tsx';
 
 export const HotRow = memo(function HotRow({ mint, me }: { mint: string; me: string | null }) {
   const coin = board.use((s) => s.coins[mint]);
   const wanted = wants.use((s) => s.mine.includes(mint));
+  const peek = usePeek();
   if (!coin) return null;
   const admin = !!me && (coin.admin === me || coin.creator === me);
   return (
@@ -21,6 +23,7 @@ export const HotRow = memo(function HotRow({ mint, me }: { mint: string; me: str
       className="hrow"
       data-testid="hot-row"
       data-mint={mint}
+      {...peek.bind}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('a,button')) return;
         go(coinPath(mint));
@@ -63,6 +66,7 @@ export const HotRow = memo(function HotRow({ mint, me }: { mint: string; me: str
           </a>
         )}
       </div>
+      {peek.open && <BookPeek mint={mint} symbol={coin.symbol} />}
     </div>
   );
 });

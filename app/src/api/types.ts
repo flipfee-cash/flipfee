@@ -213,4 +213,36 @@ export type StreamEvent =
   | { type: 'paid'; mint: string; to: string; amount: number; kind: 'holder' | 'owner'; sig?: string }
   | { type: 'register'; mint: string; owner: string; coin: Coin | null; price: number; maxAhead: number; sig?: string }
   | { type: 'stats'; stats: Stats }
-  | { type: 'want'; mint: string; count: number; wallet?: string };
+  | { type: 'want'; mint: string; count: number; wallet?: string }
+  | { type: 'book'; mint: string };
+
+/** One price level of a coin's order book (SOL per hour; hours summed over the level's orders). */
+export interface Level {
+  price: number;
+  hours: number;
+  orders: number;
+  house: boolean;
+  mine: number;
+}
+
+export interface Order {
+  id: string;
+  mint: string;
+  side: 'bid' | 'ask';
+  price: number;
+  hours: number;
+  t: number;
+  house: boolean;
+}
+
+export interface Book {
+  mint: string;
+  bids: Level[];
+  asks: Level[];
+  bestBid: number | null;
+  bestAsk: number | null;
+  spread: number | null;
+  mid: number | null;
+  orders: number;
+  mine: Order[];
+}

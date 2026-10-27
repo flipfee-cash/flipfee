@@ -25,7 +25,7 @@ const HAS_CLIENT = existsSync(CLIENT_DIST);
 const proxy: Record<string, ProxyOptions> = {
   '/api': {
     target: API,
-    changeOrigin: false,
+    changeOrigin: !!process.env.FLIPFEE_API,
     // SSE: keep the stream open and unbuffered
     timeout: 0,
     proxyTimeout: 0,

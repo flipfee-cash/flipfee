@@ -6,7 +6,7 @@ import { createStore } from '../state/store.ts';
 /** A plausible Solana address (the server checks it exactly). */
 const isAddress = (s: string) => /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(s);
 
-export type Route = { name: 'board' } | { name: 'coin'; mint: string } | { name: 'dev'; mint?: string } | { name: 'me' } | { name: 'docs' } | { name: 'terms' } | { name: 'privacy' };
+export type Route = { name: 'board' } | { name: 'coin'; mint: string } | { name: 'dev'; mint?: string } | { name: 'me' } | { name: 'docs' } | { name: 'market' } | { name: 'terms' } | { name: 'privacy' };
 
 export function parsePath(path: string): Route {
   const parts = path.split('?')[0].split('#')[0].split('/').filter(Boolean);
@@ -23,6 +23,8 @@ export function parsePath(path: string): Route {
       return { name: 'me' };
     case 'docs':
       return { name: 'docs' };
+    case 'market':
+      return { name: 'market' };
     case 'terms':
       return { name: 'terms' };
     case 'privacy':
@@ -56,7 +58,7 @@ export function go(path: string, replace = false): void {
     else history.pushState(null, '', path);
     router.set({ route: read(), path });
   };
-  // seamless page changes: elements that share a view-transition-name (a coin's picture and
+  // seamless page changes (owner, 2026-10-26): elements that share a view-transition-name (a coin's picture and
   // ticker, the vault coin) move from the old page to the new one; the rest cross-fades. Off with reduced motion.
   const doc = document as Document & { startViewTransition?: (cb: () => Promise<void>) => { ready: Promise<void>; finished: Promise<void> } };
   if (!doc.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

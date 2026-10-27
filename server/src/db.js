@@ -18,6 +18,12 @@ CREATE INDEX IF NOT EXISTS events_mint ON events (mint, id);
 -- one row per wallet per coin
 CREATE TABLE IF NOT EXISTS wants (mint TEXT NOT NULL, wallet TEXT NOT NULL, t INTEGER NOT NULL, PRIMARY KEY (mint, wallet));
 CREATE INDEX IF NOT EXISTS wants_wallet ON wants (wallet, t);
+CREATE TABLE IF NOT EXISTS orders (
+  id TEXT PRIMARY KEY, mint TEXT NOT NULL, wallet TEXT NOT NULL, side TEXT NOT NULL, price INTEGER NOT NULL,
+  hours INTEGER NOT NULL, t INTEGER NOT NULL, status TEXT NOT NULL, house INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS orders_mint ON orders (mint, status);
+CREATE INDEX IF NOT EXISTS orders_wallet ON orders (wallet, status);
 -- exact creator fees per coin and minute (m = unix minute), from the trade events we decoded
 CREATE TABLE IF NOT EXISTS buckets (
   mint TEXT NOT NULL, m INTEGER NOT NULL, fee INTEGER NOT NULL DEFAULT 0, trades INTEGER NOT NULL DEFAULT 0,

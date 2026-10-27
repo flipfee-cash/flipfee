@@ -1,4 +1,4 @@
-// Keys come from files only. Nothing here logs, prints or stores a secret; the keeper key is
+// Keys come from files only (forked from peek-sol). Nothing here logs, prints or stores a secret; the keeper key is
 // read once into a Keypair and only its public key leaves this module in logs.
 import { readFileSync, statSync } from 'node:fs';
 import { Keypair } from '@solana/web3.js';

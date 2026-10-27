@@ -1,4 +1,4 @@
-// Small example panels for pages that wait on a wallet: what one bought hour
+// Small example panels for pages that wait on a wallet (owner, 2026-10-26: "no empty pages"): what one bought hour
 // looks like (Me) and what a dev gets over a month (Devs). Example data from sample.ts, labelled as such.
 import { useMemo } from 'react';
 import { copy, fill } from '../copy.ts';

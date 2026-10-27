@@ -1,4 +1,4 @@
-// pump.fun REST: coin records (frontend-api-v3 /coins-v2/<mint>), the coin lists that feed the
+// pump.fun REST (forked from peek-sol): coin records (frontend-api-v3 /coins-v2/<mint>), the coin lists that feed the
 // Hot list (/coins sorted by last trade or market cap, /coins/currently-live), a wallet's created coins
 // (/coins-v2/user-created-coins/<wallet>), per-coin market activity (swap-api /v1/coins/<mint>/market-activity:
 // volume and trades over 5m/1h/6h/24h) and SOL/USD (/sol-price). Images come from pump.fun's image CDN.

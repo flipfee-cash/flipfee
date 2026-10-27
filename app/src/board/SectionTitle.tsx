@@ -1,4 +1,4 @@
-// A home section's one-line title: a plain statement of what the section shows, with its key words
+// A home section's one-line title (owner, 2026-10-26): a plain statement of what the section shows, with its key words
 // in ink. Words between *stars* in the copy are the key words; they dither in when the title first scrolls into view,
 // and a dithered underline drifts under them.
 import { useEffect, useRef } from 'react';

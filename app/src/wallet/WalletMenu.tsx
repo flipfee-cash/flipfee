@@ -79,7 +79,7 @@ export function WalletMenu() {
               onClick={() =>
                 void ensureSession().then(
                   () => toast({ kind: 'ok', title: copy.toast.signedIn }, 1800),
-                  (e) => toast({ kind: 'warn', title: isRejection(e) ? copy.err.rejected : copy.err.generic }),
+                  (e) => toast({ kind: 'warn', title: isRejection(e) ? copy.err.rejected : copy.err.wallet }),
                 )
               }
             >

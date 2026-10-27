@@ -1,7 +1,7 @@
 # flipfee-client
 
 TypeScript client for the `flipfee` Solana program and the pump.fun instructions around it. One ESM bundle
-(`dist/index.js` + `dist/index.d.ts`), built with tsup. It runs in Node ≥ 22 and in
+(`dist/index.js` + `dist/index.d.ts`), built with tsup like `peek-sol/program/client`. It runs in Node ≥ 22 and in
 the browser (Vite). Peer dependencies: `@solana/web3.js` 1.x and `buffer`.
 
 - Amounts are **lamports as `bigint`**. Times are **unix seconds as `number`** (chain clock).

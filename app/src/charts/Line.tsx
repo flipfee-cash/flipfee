@@ -51,17 +51,19 @@ export function Line({ points, height = 160, title, every = 5 }: { points: Pt[];
           <span key={i}>{i % every === 0 ? p.label : ''}</span>
         ))}
       </div>
-      <table className="sr">
-        <caption>{title}</caption>
-        <tbody>
-          {points.map((p, i) => (
-            <tr key={i}>
-              <th scope="row">{p.label}</th>
-              <td>{p.tip}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="sr">
+        <table>
+          <caption>{title}</caption>
+          <tbody>
+            {points.map((p, i) => (
+              <tr key={i}>
+                <th scope="row">{p.label}</th>
+                <td>{p.tip}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   );
 }

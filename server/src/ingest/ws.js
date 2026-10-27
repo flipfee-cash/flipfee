@@ -1,4 +1,4 @@
-// A WebSocket that stays connected: exponential back-off with jitter on every close, a stall
+// A WebSocket that stays connected (forked from peek-sol): exponential back-off with jitter on every close, a stall
 // watchdog (no message for `stallMs` = reconnect), a paced send queue (sources limit how fast a client may send), and
 // message/byte counters (the RPC load in /health).
 import { log, logError, redact } from '../log.js';

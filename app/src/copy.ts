@@ -39,6 +39,9 @@ export const copy = {
     dev: 'Other hours',
     devSub: 'The dev gets those fees.',
     lastHour: 'Last hour paid',
+    bestBid: 'Best bid',
+    perH: 'SOL / hour',
+    enter: 'Enter the fees market',
   },
 
   docs: {
@@ -102,7 +105,7 @@ export const copy = {
 
   sections: {
     live: '*Live coins* pay the buyer of each hour *every minute*.',
-    wanted: 'These *hot coins* are the most wanted to go *live*.',
+    wanted: 'These are the most *wanted coins* to *trade fees*.',
     hot: 'These are the *hottest coins* on *{pf}* right now.',
   },
 
@@ -131,6 +134,7 @@ export const copy = {
     legal: 'Legal',
     links: 'Links',
     solscan: 'Our code on Solscan',
+    github: 'Our code on GitHub',
   },
 
   wanted: {
@@ -193,6 +197,51 @@ export const copy = {
     emptyHot: 'See hot coins',
     cash: 'cash',
     sale: '+{sol} SOL to the dev',
+  },
+
+  market: {
+    navTitle: 'Market',
+    title: '*Bid* and *ask* on hours of *coin fees*.',
+    open: 'Open the market',
+    search: 'Search a ticker, name or CA',
+    none: 'Try another ticker, name or CA.',
+    colFees: 'Fees last hour',
+    colBid: 'Best bid',
+    colAsk: 'Best ask',
+    colBook: 'Book',
+    first: 'Place the first order',
+    bookTitle: 'Order book',
+    bookSub: 'Price per hour in SOL. Last hour paid {sol} SOL.',
+    priceCol: 'Price',
+    hoursCol: 'Hours',
+    spread: 'Spread',
+    perHour: 'SOL per hour',
+    noAsks: 'Asks show here.',
+    noBids: 'Bids show here.',
+    house: 'flipfee',
+    yours: 'Your orders',
+    h: 'h',
+    hoursWord: 'hours',
+    bid: 'Bid',
+    ask: 'Ask',
+    bidTab: 'Bid · buy hours',
+    askTab: 'Ask · sell hours',
+    sideLabel: 'Order side',
+    price: 'Price per hour',
+    hours: 'Hours',
+    total: 'Total',
+    less: 'Lower price',
+    more: 'Higher price',
+    placeBid: 'Bid on {ticker}',
+    placeAsk: 'Ask on {ticker}',
+    crossBid: 'This bid meets the best ask. Set a lower price.',
+    crossAsk: 'This ask meets the best bid. Set a higher price.',
+    note: 'Your order waits in the book. Fills start when trading opens.',
+    placedBid: 'Your bid on {ticker} is in the book.',
+    placedAsk: 'Your ask on {ticker} is in the book.',
+    cancel: 'Cancel',
+    cancelled: 'Order cancelled.',
+    peek: 'Order book',
   },
 
   hot: {
@@ -429,6 +478,7 @@ export const copy = {
     skip: 'Skip to content',
     home: 'flipfee home',
     docs: 'Docs',
+    market: 'Market',
   },
 
   conn: {
@@ -457,6 +507,7 @@ export const copy = {
   err: {
     rejected: 'Phantom closed the request.',
     generic: 'The request failed. Try again.',
+    wallet: 'Open Phantom. Then tap Connect again.',
     network: 'The network is busy. Try again.',
     funds: 'Your wallet needs {sol} SOL for this.',
     price: 'The price changed. Check the new price.',

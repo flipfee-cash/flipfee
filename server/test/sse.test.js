@@ -1,4 +1,4 @@
-// SSE framing and delivery: headers that survive proxies, the padding comment, named events
+// SSE framing and delivery (forked from peek-sol): headers that survive proxies, the padding comment, named events
 // (`event: trade` … with `id:`), stats frames, `event: ping` heartbeats, Last-Event-ID replay, type and coin filters,
 // and a stalled client being cut off.
 import assert from 'node:assert/strict';

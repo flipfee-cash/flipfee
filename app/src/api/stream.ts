@@ -15,7 +15,7 @@ export interface StreamHandlers {
   reopened(): void;
 }
 
-const NAMES = ['trade', 'fee', 'window', 'buy', 'paid', 'register', 'stats', 'want'] as const;
+const NAMES = ['trade', 'fee', 'window', 'buy', 'paid', 'register', 'stats', 'want', 'book'] as const;
 const QUEUE_CAP = 400;
 const SILENCE_MS = 25000;
 

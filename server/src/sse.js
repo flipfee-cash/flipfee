@@ -1,4 +1,4 @@
-// GET /api/stream (Server-Sent Events). Flushes at once and stays unbuffered through proxies:
+// GET /api/stream (Server-Sent Events, forked from peek-sol). Flushes at once and stays unbuffered through proxies:
 // no compression, `cache-control: no-cache, no-transform`, `x-accel-buffering: no`, Nagle off, a 2 KB comment first
 // (some proxies hold small first chunks). Then one named event per bus event (`event: trade` … `event: want`, with
 // `id:` = the event's ULID, so a reconnect sends Last-Event-ID and gets the gap replayed), `event: stats` every 5 s and `event: ping`

@@ -1,4 +1,4 @@
-// The header's dot field: a fine grid of
+// The header's dot field (owner, 2026-10-26: "the mouse effect from treg.to's footer, in our header"): a fine grid of
 // faint dots behind the top bar. Near the pointer the dots push away like a lens, grow a little and take the ink, then
 // spring back. Frames run only while something moves; touch screens and reduced motion get the still grid.
 import { useEffect, useRef } from 'react';

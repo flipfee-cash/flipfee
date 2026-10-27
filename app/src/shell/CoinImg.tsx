@@ -19,7 +19,14 @@ export const CoinImg = memo(function CoinImg({ src, symbol, size = 36, vt, vtNam
   const letters = tick(symbol).slice(1, 3).toUpperCase();
   return (
     <span className="coin-img" style={{ width: size, height: size, viewTransitionName: vtName }} data-vt={vt} aria-hidden="true">
-      {url ? <img src={url} alt="" width={size} height={size} loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setBad(true)} /> : <b style={{ fontSize: Math.round(size * 0.36) }}>{letters}</b>}
+      {url ? (
+        // an SVG <image>, not <img>: Safari (every iPhone browser) blanks an <img> under the dither filter
+        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+          <image href={url} width={size} height={size} preserveAspectRatio="xMidYMid slice" filter="url(#ff-dither)" onError={() => setBad(true)} />
+        </svg>
+      ) : (
+        <b style={{ fontSize: Math.round(size * 0.36) }}>{letters}</b>
+      )}
     </span>
   );
 });

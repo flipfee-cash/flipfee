@@ -1,16 +1,16 @@
+# never in git: keypairs, secrets, data, build output
+**/.keys/
+**/*keypair*.json
+**/deployer.json
+.env
+.env.*
+!.env.example
+**/data/
 node_modules/
 dist/
 target/
 .anchor/
 .test-ledger*/
 test-ledger/
-.keys/
 .shots/
-.env
-.env.*
-!.env.example
-data/
-test-results/
-*.tsbuildinfo
 .DS_Store
-client/*.tgz

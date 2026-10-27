@@ -5,7 +5,7 @@
 import { logError } from './log.js';
 import { isUlid, ulid } from './ulid.js';
 
-export const TYPES = ['trade', 'fee', 'window', 'buy', 'paid', 'register', 'want'];
+export const TYPES = ['trade', 'fee', 'window', 'buy', 'paid', 'register', 'want', 'book'];
 const TYPE_SET = new Set(TYPES);
 const KEEP_ROWS = 20_000;
 

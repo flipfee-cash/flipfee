@@ -21,6 +21,7 @@ import { shareCoin, wantCoin, wants } from '../board/actions.ts';
 import { Hours } from './Hours.tsx';
 import { TradeStream } from './TradeStream.tsx';
 import { BuyPanel } from './BuyPanel.tsx';
+import { OrderBook } from '../market/OrderBook.tsx';
 
 type Load = { k: 'wait' } | { k: 'ok'; timeline: Timeline | null; at: number } | { k: 'err'; missing: boolean };
 
@@ -179,6 +180,7 @@ export function CoinPage({ mint }: { mint: string }) {
         </div>
         <aside className="coin-side">
           {ff && <BuyPanel coin={coin} me={me} mine={mine} />}
+          <OrderBook coin={coin} />
           {!ff && (
             <section className="panel dev-cta" data-testid="coin-dev-cta">
               {coin.wants > 0 && (

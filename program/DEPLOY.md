@@ -1,6 +1,6 @@
 # flipfee program: build, test, deploy (mainnet runbook, not run)
 
-Nothing here has been run on mainnet or devnet yet. Every
+Nothing here has been run on mainnet or devnet. The lead deploys; the owner funds the deployer and the keeper. Every
 mainnet call made while building this was read-only (getAccountInfo / getProgramAccounts / getSignaturesForAddress /
 getTransaction / simulateTransaction / getMinimumBalanceForRentExemption).
 
@@ -22,7 +22,7 @@ getTransaction / simulateTransaction / getMinimumBalanceForRentExemption).
 | Key | Public key | File |
 |---|---|---|
 | Program id | `D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW` | `.keys/flipfee-program.json` |
-| Deployer (upgrade authority, then admin) | your own keypair | `.keys/deployer.json` |
+| Deployer (upgrade authority, then admin) | `7FBfPdBduWckk4XyEKZkicDmHmaack8TRhYoJVuAbGAp` | `.keys/deployer.json` |
 
 The program checks its id at runtime (`declare_id!`). For a different id: new keypair, put its address in
 `programs/flipfee/src/lib.rs` and `Anchor.toml`, rebuild, rerun every test; the client takes `programId` everywhere.
@@ -31,7 +31,7 @@ The program checks its id at runtime (`declare_id!`). For a different id: new ke
 
 ```bash
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$HOME/.cargo/bin:$PATH"   # Agave 4.1.2
-cd program
+cd /Users/ettrq/ft1/flipfee/program
 npm install
 cp .keys/flipfee-program.json target/deploy/flipfee-keypair.json
 ~/.avm/bin/anchor-1.2.0 build                 # target/deploy/flipfee.so + target/idl/flipfee.json
@@ -94,7 +94,7 @@ solana program deploy target/deploy/flipfee.so \
   --use-rpc
 solana program show D6sPTL4KkP6bc1QpC33h8f5MKEALJtRmB89f8H4CbpjW -u "$RPC"   # Authority = deployer, Data Length = 320096
 
-# Initialize: the deployer (upgrade authority) becomes the admin; treasury = the fee wallet
+# Initialize: the deployer (upgrade authority) becomes the admin; treasury = the owner's fee wallet
 node scripts/init.mjs --rpc "$RPC" --treasury <TREASURY_PUBKEY> --fee-bps 500          # dry run, prints everything
 node scripts/init.mjs --rpc "$RPC" --treasury <TREASURY_PUBKEY> --fee-bps 500 --yes
 ```
@@ -106,13 +106,13 @@ same multisig.
 
 ```bash
 solana-keygen new --no-bip39-passphrase --silent -o /etc/flipfee/keeper.json && chmod 600 /etc/flipfee/keeper.json
-solana-keygen pubkey /etc/flipfee/keeper.json    # fund this address (~0.1 SOL)
+solana-keygen pubkey /etc/flipfee/keeper.json    # the owner funds this address (~0.1 SOL)
 # in-process with the server (KEEPER=1): import { createKeeper } from 'flipfee-keeper'
 # or alone:
 node keeper/dist/cli.js --rpc "$RPC" --keypair /etc/flipfee/keeper.json --interval 60 --priority 10000
 ```
 
-## Risks to know
+## Risks the owner should know
 
 - **pump.fun admin powers.** pump's `admin_cto` / `admin_cto_sharing_config` (community takeover) can move a coin's
   creator fee away from its sharing config, or reset the split. Then fees stop reaching the vault. `buy` re-checks

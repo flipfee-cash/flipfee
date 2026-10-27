@@ -137,6 +137,7 @@ export function loadConfig(baseEnv = process.env) {
     // trade subscriptions are the scarce resource: registered coins first, then the hottest coins
     trackMax: Math.max(1, num(env.TRACK_MAX, 60)),
     hotMax: Math.max(0, num(env.HOT_MAX, 30)), // rows in the board's Hot list
+    houseQuotes: bool(env.HOUSE_QUOTES, pumpApi), // flipfee's own bid/ask ladder on the hottest coins (orders.js)
     rotateMs: num(env.ROTATE_MS, 60_000),
     minDwellMs: num(env.MIN_DWELL_MIN, 15) * 60_000,
     swapMargin: num(env.SWAP_MARGIN, 1.5), // a candidate replaces a tracked coin when its score is this much higher

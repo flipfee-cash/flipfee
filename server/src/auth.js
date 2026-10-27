@@ -1,4 +1,4 @@
-// Sign-In With Solana (statement "Sign in to flipfee."). The Wallet Standard `solana:signIn`
+// Sign-In With Solana (copied from peek-sol; statement "Sign in to flipfee."). The Wallet Standard `solana:signIn`
 // message format, CAIP-122 style: POST /api/auth/nonce
 // gives the exact message (and the same fields as a `SolanaSignInInput`, for wallets that build it themselves);
 // POST /api/auth/verify checks the ed25519 signature over the signed bytes, the domain, URI, version, chain id,
