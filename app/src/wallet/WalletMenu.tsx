@@ -66,7 +66,7 @@ export function WalletMenu() {
                 <IconCheck size={14} />
                 {copy.wallet.signedIn}
               </b>
-              <button type="button" className="btn btn-line btn-sm" onClick={signOut}>
+              <button type="button" className="btn btn-line btn-sm" data-testid="sign-out" onClick={signOut}>
                 {copy.wallet.signOut}
               </button>
             </>

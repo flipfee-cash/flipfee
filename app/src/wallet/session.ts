@@ -47,6 +47,8 @@ export function token(): string | null {
 export const signedIn = (): boolean => !!token();
 
 export function signOut(): void {
+  // Revoke the token on the server too. api() reads the token before its first await, so this runs before save(null) clears it.
+  if (token()) void post('/auth/logout', {}, { auth: 'try' }).catch(() => undefined);
   save(null);
 }
 

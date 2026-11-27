@@ -149,6 +149,23 @@ async function watch(browser, label, phone) {
   await ctx.close();
 }
 
+/** Sign out from the wallet menu also revokes the bearer on the server (POST /api/auth/logout with it). */
+async function signOutRevokes(page, label, phone) {
+  await tap(page, phone, '[data-testid=wallet-pill]');
+  const btn = page.locator('[data-testid=sign-out]');
+  if (!(await btn.isVisible().catch(() => false))) {
+    await page.keyboard.press('Escape');
+    return;
+  }
+  const req = page.waitForRequest((r) => r.method() === 'POST' && new URL(r.url()).pathname === '/api/auth/logout', { timeout: 5000 }).catch(() => null);
+  await tap(page, phone, '[data-testid=sign-out]');
+  const r = await req;
+  const auth = r ? ((await r.allHeaders()).authorization ?? '') : '';
+  check(`${label}: sign out revokes the server session`, /^Bearer \S+/.test(auth), r ? 'logout sent' : 'no logout request');
+  await page.keyboard.press('Escape');
+  await sleep(200);
+}
+
 /** Connect + sign in + want + share (+ buy, cash, dev connect in fixture/localnet). */
 async function flows(browser, label, phone) {
   const { ctx, page, errors } = await newCtx(browser, phone, { seed: args.seed || '', signIn: label.endsWith('desk') });
@@ -198,6 +215,7 @@ async function flows(browser, label, phone) {
   await sleep(200);
 
   if (MODE === 'server') {
+    await signOutRevokes(page, label, phone);
     check(`${label}: no page errors (flows)`, errors.length === 0, errors.slice(0, 3).join(' | '));
     await ctx.close();
     return;
@@ -311,6 +329,7 @@ async function flows(browser, label, phone) {
       await shot(page, `${label}-dashboard`, !phone);
     }
   } else check(`${label}: a coin ready to connect`, false, 'none in the dev list');
+  await signOutRevokes(page, label, phone);
   check(`${label}: no page errors (flows)`, errors.length === 0, errors.slice(0, 3).join(' | '));
   await ctx.close();
 }

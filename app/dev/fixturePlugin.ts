@@ -773,6 +773,11 @@ export function fixturePlugin(): Plugin {
             w.sessions.set(token, { address, exp });
             return json(res, 200, { token, address, expiresAt: exp });
           }
+          if (a === '/auth/logout' && req.method === 'POST') {
+            const tok = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+            w.sessions.delete(tok);
+            return json(res, 200, { ok: true });
+          }
           if (a === '/want' && req.method === 'POST') {
             const tok = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
             const s = w.sessions.get(tok);
